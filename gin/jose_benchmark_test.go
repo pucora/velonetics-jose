@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"testing"
 
-	veloneticsjose "github.com/velonetics/velonetics-jose/v2"
-	"github.com/velonetics/lura/v2/config"
+	veloneticsjose "github.com/pucora/velonetics-jose/v2"
+	"github.com/pucora/lura/v2/config"
 )
 
 func BenchmarkValidation_ES256(b *testing.B) {

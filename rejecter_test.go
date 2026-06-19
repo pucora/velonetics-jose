@@ -3,8 +3,8 @@ package jose
 import (
 	"testing"
 
-	"github.com/velonetics/lura/v2/config"
-	"github.com/velonetics/lura/v2/logging"
+	"github.com/pucora/lura/v2/config"
+	"github.com/pucora/lura/v2/logging"
 )
 
 func TestChainedRejecterFactory(t *testing.T) {

@@ -12,8 +12,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/velonetics/velonetics-jose/v2/secrets"
-	"github.com/velonetics/lura/v2/core"
+	"github.com/pucora/velonetics-jose/v2/secrets"
+	"github.com/pucora/lura/v2/core"
 )
 
 func TestJWK(t *testing.T) {
@@ -363,7 +363,7 @@ func jwkEndpoint(name string) http.HandlerFunc {
 			rw.WriteHeader(500)
 			return
 		}
-		if ua := req.Header.Get("User-Agent"); ua != core.VeloneticsUserAgent {
+		if ua := req.Header.Get("User-Agent"); ua != core.PucoraUserAgent {
 			rw.WriteHeader(500)
 			return
 		}

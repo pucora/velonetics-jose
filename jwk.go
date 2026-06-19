@@ -17,10 +17,10 @@ import (
 	"time"
 
 	jose "github.com/go-jose/go-jose/v3"
-	auth0 "github.com/velonetics/go-auth0/v2"
-	"github.com/velonetics/lura/v2/core"
+	auth0 "github.com/pucora/go-auth0/v2"
+	"github.com/pucora/lura/v2/core"
 
-	"github.com/velonetics/velonetics-jose/v2/secrets"
+	"github.com/pucora/velonetics-jose/v2/secrets"
 )
 
 type SecretProviderConfig struct {
@@ -196,7 +196,7 @@ type veloneticsTransport struct {
 }
 
 func (k veloneticsTransport) RoundTrip(req *http.Request) (*http.Response, error) {
-	req.Header.Set("User-Agent", core.VeloneticsUserAgent)
+	req.Header.Set("User-Agent", core.PucoraUserAgent)
 	return k.Transport.RoundTrip(req)
 }
 

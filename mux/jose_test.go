@@ -10,10 +10,10 @@ import (
 	"strings"
 	"testing"
 
-	jose "github.com/velonetics/velonetics-jose/v2"
-	"github.com/velonetics/lura/v2/logging"
-	"github.com/velonetics/lura/v2/proxy"
-	muxlura "github.com/velonetics/lura/v2/router/mux"
+	jose "github.com/pucora/velonetics-jose/v2"
+	"github.com/pucora/lura/v2/logging"
+	"github.com/pucora/lura/v2/proxy"
+	muxlura "github.com/pucora/lura/v2/router/mux"
 )
 
 func TestTokenSignatureValidator(t *testing.T) { // skipcq: GO-R1005

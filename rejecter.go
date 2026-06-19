@@ -1,8 +1,8 @@
 package jose
 
 import (
-	"github.com/velonetics/lura/v2/config"
-	"github.com/velonetics/lura/v2/logging"
+	"github.com/pucora/lura/v2/config"
+	"github.com/pucora/lura/v2/logging"
 )
 
 // Rejecter defines the interface for the components responsible for rejecting tokens.

@@ -7,7 +7,7 @@ import (
 
 	"github.com/go-jose/go-jose/v3"
 	"github.com/go-jose/go-jose/v3/jwt"
-	"github.com/velonetics/go-auth0/v2"
+	"github.com/pucora/go-auth0/v2"
 )
 
 // TokenIDGetter extracts the keyID from the JSON web token

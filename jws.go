@@ -8,13 +8,13 @@ import (
 	"strings"
 
 	jose "github.com/go-jose/go-jose/v3"
-	"github.com/velonetics/go-auth0/v2"
-	"github.com/velonetics/lura/v2/config"
+	"github.com/pucora/go-auth0/v2"
+	"github.com/pucora/lura/v2/config"
 )
 
 const (
-	ValidatorNamespace = "github.com/velonetics/velonetics-jose/validator"
-	SignerNamespace    = "github.com/velonetics/velonetics-jose/signer"
+	ValidatorNamespace = "github.com/pucora/velonetics-jose/validator"
+	SignerNamespace    = "github.com/pucora/velonetics-jose/signer"
 	defaultRolesKey    = "roles"
 )
 

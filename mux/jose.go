@@ -10,12 +10,12 @@ import (
 	"strings"
 
 	"github.com/go-jose/go-jose/v3/jwt"
-	"github.com/velonetics/go-auth0/v2"
-	veloneticsjose "github.com/velonetics/velonetics-jose/v2"
-	"github.com/velonetics/lura/v2/config"
-	"github.com/velonetics/lura/v2/logging"
-	"github.com/velonetics/lura/v2/proxy"
-	muxlura "github.com/velonetics/lura/v2/router/mux"
+	"github.com/pucora/go-auth0/v2"
+	veloneticsjose "github.com/pucora/velonetics-jose/v2"
+	"github.com/pucora/lura/v2/config"
+	"github.com/pucora/lura/v2/logging"
+	"github.com/pucora/lura/v2/proxy"
+	muxlura "github.com/pucora/lura/v2/router/mux"
 )
 
 func HandlerFactory(hf muxlura.HandlerFactory, paramExtractor muxlura.ParamExtractor, logger logging.Logger, rejecterF veloneticsjose.RejecterFactory) muxlura.HandlerFactory {

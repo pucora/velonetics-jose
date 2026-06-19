@@ -11,11 +11,11 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	veloneticsjose "github.com/velonetics/velonetics-jose/v2"
-	"github.com/velonetics/lura/v2/config"
-	"github.com/velonetics/lura/v2/logging"
-	"github.com/velonetics/lura/v2/proxy"
-	ginlura "github.com/velonetics/lura/v2/router/gin"
+	veloneticsjose "github.com/pucora/velonetics-jose/v2"
+	"github.com/pucora/lura/v2/config"
+	"github.com/pucora/lura/v2/logging"
+	"github.com/pucora/lura/v2/proxy"
+	ginlura "github.com/pucora/lura/v2/router/gin"
 )
 
 func Example_rs256() {

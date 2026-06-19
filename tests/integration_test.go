@@ -10,12 +10,12 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	veloneticsjose "github.com/velonetics/velonetics-jose/v2"
-	jose "github.com/velonetics/velonetics-jose/v2/gin"
-	"github.com/velonetics/lura/v2/config"
-	"github.com/velonetics/lura/v2/logging"
-	"github.com/velonetics/lura/v2/proxy"
-	ginlura "github.com/velonetics/lura/v2/router/gin"
+	veloneticsjose "github.com/pucora/velonetics-jose/v2"
+	jose "github.com/pucora/velonetics-jose/v2/gin"
+	"github.com/pucora/lura/v2/config"
+	"github.com/pucora/lura/v2/logging"
+	"github.com/pucora/lura/v2/proxy"
+	ginlura "github.com/pucora/lura/v2/router/gin"
 )
 
 func TestJoseMw(t *testing.T) {
@@ -36,7 +36,7 @@ func TestJoseMw(t *testing.T) {
 			Data: map[string]interface{}{
 				"access_token": map[string]interface{}{
 					"aud":   "http://api.example.com",
-					"iss":   "https://velonetics.io",
+					"iss":   "https://pucora.io",
 					"sub":   "1234567890qwertyuio",
 					"jti":   "mnb23vcsrt756yuiomnbvcx98ertyuiop",
 					"roles": []interface{}{"role_a", "role_b"},
@@ -44,7 +44,7 @@ func TestJoseMw(t *testing.T) {
 				},
 				"refresh_token": map[string]interface{}{
 					"aud": "http://api.example.com",
-					"iss": "https://velonetics.io",
+					"iss": "https://pucora.io",
 					"sub": "1234567890qwertyuio",
 					"jti": "mnb23vcsrt756yuiomn12876bvcx98ertyuiop",
 					"exp": 1735689600,
@@ -62,7 +62,7 @@ func TestJoseMw(t *testing.T) {
 			},
 		},
 		ExtraConfig: map[string]interface{}{
-			"github.com/velonetics/velonetics-jose/signer": map[string]interface{}{
+			"github.com/pucora/velonetics-jose/signer": map[string]interface{}{
 				"alg":                  "RS256",
 				"kid":                  "2011-04-29",
 				"keys-to-sign":         []interface{}{"access_token", "refresh_token"},

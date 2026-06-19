@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/velonetics/go-auth0/v2"
-	"github.com/velonetics/lura/v2/config"
-	"github.com/velonetics/lura/v2/logging"
+	"github.com/pucora/go-auth0/v2"
+	"github.com/pucora/lura/v2/config"
+	"github.com/pucora/lura/v2/logging"
 )
 
 func TestJWKClient_globalCache(t *testing.T) {

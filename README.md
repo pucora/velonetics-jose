@@ -1,2 +1,2 @@
 # velonetics-jose
-JOSE component for the Velonetics framework
+JOSE component for the Pucora framework

@@ -11,11 +11,11 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	jose "github.com/velonetics/velonetics-jose/v2"
-	"github.com/velonetics/lura/v2/config"
-	"github.com/velonetics/lura/v2/logging"
-	"github.com/velonetics/lura/v2/proxy"
-	ginlura "github.com/velonetics/lura/v2/router/gin"
+	jose "github.com/pucora/velonetics-jose/v2"
+	"github.com/pucora/lura/v2/config"
+	"github.com/pucora/lura/v2/logging"
+	"github.com/pucora/lura/v2/proxy"
+	ginlura "github.com/pucora/lura/v2/router/gin"
 )
 
 func TestTokenSignatureValidator(t *testing.T) { // skipcq: GO-R1005
