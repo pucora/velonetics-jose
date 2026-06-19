@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	veloneticsjose "github.com/pucora/velonetics-jose/v2"
+	pucorajose "github.com/pucora/pucora-jose/v2"
 	"github.com/pucora/lura/v2/config"
 	"github.com/pucora/lura/v2/logging"
 	"github.com/pucora/lura/v2/proxy"
@@ -25,7 +25,7 @@ func Example_rs256() {
 	defer publicServer.Close()
 
 	verifierCfg := newVerifierEndpointCfg("RS256", publicServer.URL, []string{"role_a"}, false)
-	verifierCfg.ExtraConfig[veloneticsjose.ValidatorNamespace].(map[string]interface{})["operation_debug"] = true
+	verifierCfg.ExtraConfig[pucorajose.ValidatorNamespace].(map[string]interface{})["operation_debug"] = true
 
 	runValidationCycle(
 		newSignerEndpointCfg("RS256", "2011-04-29", privateServer.URL),
@@ -113,7 +113,7 @@ func Example_hs256_cookie() {
 	defer server.Close()
 
 	sCfg := newSignerEndpointCfg("HS256", "sim2", server.URL)
-	_, signer, _ := veloneticsjose.NewSigner(sCfg, nil)
+	_, signer, _ := pucorajose.NewSigner(sCfg, nil)
 	verifierCfg := newVerifierEndpointCfg("HS256", server.URL, []string{"role_a"}, false)
 
 	externalTokenIssuer := func(rw http.ResponseWriter, _ *http.Request) {
@@ -182,8 +182,8 @@ func runValidationCycle(signerEndpointCfg, validatorEndpointCfg *config.Endpoint
 		Method:   signerEndpointCfg.Method,
 		Backend:  signerEndpointCfg.Backend,
 		ExtraConfig: config.ExtraConfig{
-			veloneticsjose.SignerNamespace:    signerEndpointCfg.ExtraConfig[veloneticsjose.SignerNamespace],
-			veloneticsjose.ValidatorNamespace: validatorEndpointCfg.ExtraConfig[veloneticsjose.ValidatorNamespace],
+			pucorajose.SignerNamespace:    signerEndpointCfg.ExtraConfig[pucorajose.SignerNamespace],
+			pucorajose.ValidatorNamespace: validatorEndpointCfg.ExtraConfig[pucorajose.ValidatorNamespace],
 		},
 	}
 
@@ -301,7 +301,7 @@ func newSignerEndpointCfg(alg, ID, URL string) *config.EndpointConfig {
 			},
 		},
 		ExtraConfig: config.ExtraConfig{
-			veloneticsjose.SignerNamespace: map[string]interface{}{
+			pucorajose.SignerNamespace: map[string]interface{}{
 				"alg":                  alg,
 				"kid":                  ID,
 				"jwk_url":              URL,
@@ -325,18 +325,18 @@ func newVerifierEndpointCfg(alg, URL string, roles []string, propagatePreserveAr
 			},
 		},
 		ExtraConfig: config.ExtraConfig{
-			veloneticsjose.ValidatorNamespace: map[string]interface{}{
+			pucorajose.ValidatorNamespace: map[string]interface{}{
 				"alg":      alg,
 				"jwk_url":  URL,
 				"audience": []string{"http://api.example.com"},
 				"issuer":   "http://example.com",
 				"roles":    roles,
 				"propagate_claims": [][]string{
-					{"jti", "x-velonetics-jti"},
-					{"sub", "x-velonetics-sub"},
-					{"nonexistent", "x-velonetics-ne"},
-					{"sub", "x-velonetics-replace"},
-					{"roles", "x-velonetics-roles"},
+					{"jti", "x-pucora-jti"},
+					{"sub", "x-pucora-sub"},
+					{"nonexistent", "x-pucora-ne"},
+					{"sub", "x-pucora-replace"},
+					{"roles", "x-pucora-roles"},
 				},
 				"propagate_claims_preserve_array": propagatePreserveArrays,
 				"disable_jwk_security":            true,

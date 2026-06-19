@@ -11,21 +11,21 @@ import (
 
 	"github.com/go-jose/go-jose/v3/jwt"
 	"github.com/pucora/go-auth0/v2"
-	veloneticsjose "github.com/pucora/velonetics-jose/v2"
+	pucorajose "github.com/pucora/pucora-jose/v2"
 	"github.com/pucora/lura/v2/config"
 	"github.com/pucora/lura/v2/logging"
 	"github.com/pucora/lura/v2/proxy"
 	muxlura "github.com/pucora/lura/v2/router/mux"
 )
 
-func HandlerFactory(hf muxlura.HandlerFactory, paramExtractor muxlura.ParamExtractor, logger logging.Logger, rejecterF veloneticsjose.RejecterFactory) muxlura.HandlerFactory {
+func HandlerFactory(hf muxlura.HandlerFactory, paramExtractor muxlura.ParamExtractor, logger logging.Logger, rejecterF pucorajose.RejecterFactory) muxlura.HandlerFactory {
 	return TokenSignatureValidator(TokenSigner(hf, paramExtractor, logger), logger, rejecterF)
 }
 
 func TokenSigner(hf muxlura.HandlerFactory, paramExtractor muxlura.ParamExtractor, logger logging.Logger) muxlura.HandlerFactory {
 	return func(cfg *config.EndpointConfig, prxy proxy.Proxy) http.HandlerFunc {
-		signerCfg, signer, err := veloneticsjose.NewSigner(cfg, nil)
-		if err == veloneticsjose.ErrNoSignerCfg {
+		signerCfg, signer, err := pucorajose.NewSigner(cfg, nil)
+		if err == pucorajose.ErrNoSignerCfg {
 			logger.Info("JOSE: signer disabled for the endpoint", cfg.Endpoint)
 			return hf(cfg, prxy)
 		}
@@ -54,7 +54,7 @@ func TokenSigner(hf muxlura.HandlerFactory, paramExtractor muxlura.ParamExtracto
 				return
 			}
 
-			if err := veloneticsjose.SignFields(signerCfg.KeysToSign, signer, response); err != nil {
+			if err := pucorajose.SignFields(signerCfg.KeysToSign, signer, response); err != nil {
 				logger.Error(err.Error())
 				http.Error(w, "", http.StatusBadRequest)
 				return
@@ -93,16 +93,16 @@ func jsonRender(w http.ResponseWriter, response *proxy.Response) error {
 	return err
 }
 
-func TokenSignatureValidator(hf muxlura.HandlerFactory, logger logging.Logger, rejecterF veloneticsjose.RejecterFactory) muxlura.HandlerFactory {
+func TokenSignatureValidator(hf muxlura.HandlerFactory, logger logging.Logger, rejecterF pucorajose.RejecterFactory) muxlura.HandlerFactory {
 	return func(cfg *config.EndpointConfig, prxy proxy.Proxy) http.HandlerFunc {
 		if rejecterF == nil {
-			rejecterF = new(veloneticsjose.NopRejecterFactory)
+			rejecterF = new(pucorajose.NopRejecterFactory)
 		}
 		rejecter := rejecterF.New(logger, cfg)
 
 		handler := hf(cfg, prxy)
-		signatureConfig, err := veloneticsjose.GetSignatureConfig(cfg)
-		if err == veloneticsjose.ErrNoValidatorCfg {
+		signatureConfig, err := pucorajose.GetSignatureConfig(cfg)
+		if err == pucorajose.ErrNoValidatorCfg {
 			logger.Info("JOSE: validator disabled for the endpoint", cfg.Endpoint)
 			return handler
 		}
@@ -111,7 +111,7 @@ func TokenSignatureValidator(hf muxlura.HandlerFactory, logger logging.Logger, r
 			return handler
 		}
 
-		validator, err := veloneticsjose.NewValidator(signatureConfig, FromCookie, FromHeader)
+		validator, err := pucorajose.NewValidator(signatureConfig, FromCookie, FromHeader)
 		if err != nil {
 			log.Fatalf("%s: %s", cfg.Endpoint, err.Error())
 		}
@@ -119,21 +119,21 @@ func TokenSignatureValidator(hf muxlura.HandlerFactory, logger logging.Logger, r
 		var aclCheck func(string, map[string]interface{}, []string) bool
 
 		if signatureConfig.RolesKeyIsNested && strings.Contains(signatureConfig.RolesKey, ".") && signatureConfig.RolesKey[:4] != "http" {
-			aclCheck = veloneticsjose.CanAccessNested
+			aclCheck = pucorajose.CanAccessNested
 		} else {
-			aclCheck = veloneticsjose.CanAccess
+			aclCheck = pucorajose.CanAccess
 		}
 
 		var scopesMatcher func(string, map[string]interface{}, []string) bool
 
 		if len(signatureConfig.Scopes) > 0 && signatureConfig.ScopesKey != "" {
 			if signatureConfig.ScopesMatcher == "all" {
-				scopesMatcher = veloneticsjose.ScopesAllMatcher
+				scopesMatcher = pucorajose.ScopesAllMatcher
 			} else {
-				scopesMatcher = veloneticsjose.ScopesAnyMatcher
+				scopesMatcher = pucorajose.ScopesAnyMatcher
 			}
 		} else {
-			scopesMatcher = veloneticsjose.ScopesDefaultMatcher
+			scopesMatcher = pucorajose.ScopesDefaultMatcher
 		}
 
 		logger.Info("JOSE: validator enabled for the endpoint", cfg.Endpoint)
@@ -213,7 +213,7 @@ func propagateHeaders(
 ) {
 	if len(propagationCfg) > 0 {
 		if !propagationPreserveArrays {
-			headersToPropagate, err := veloneticsjose.CalculateHeadersToPropagate(propagationCfg, claims)
+			headersToPropagate, err := pucorajose.CalculateHeadersToPropagate(propagationCfg, claims)
 			if err != nil {
 				logger.Warning(fmt.Sprintf("JOSE: header propagations error for %s: %s", cfg.Endpoint, err.Error()))
 			}
@@ -224,7 +224,7 @@ func propagateHeaders(
 			return
 		}
 
-		headersToPropagate, err := veloneticsjose.CalculateArrayHeadersToPropagate(propagationCfg, claims)
+		headersToPropagate, err := pucorajose.CalculateArrayHeadersToPropagate(propagationCfg, claims)
 		if err != nil {
 			logger.Warning(fmt.Sprintf("JOSE: header propagations error for %s: %s", cfg.Endpoint, err.Error()))
 		}

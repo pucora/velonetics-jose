@@ -1,4 +1,4 @@
-module github.com/pucora/velonetics-jose/v2
+module github.com/pucora/pucora-jose/v2
 
 go 1.25.0
 

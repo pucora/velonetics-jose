@@ -20,7 +20,7 @@ import (
 	auth0 "github.com/pucora/go-auth0/v2"
 	"github.com/pucora/lura/v2/core"
 
-	"github.com/pucora/velonetics-jose/v2/secrets"
+	"github.com/pucora/pucora-jose/v2/secrets"
 )
 
 type SecretProviderConfig struct {
@@ -163,7 +163,7 @@ func newJWKClientOptions(cfg SecretProviderConfig) (JWKClientOptions, error) {
 	}
 	dialer := NewDialer(cfg, tlsConfig)
 
-	transport := veloneticsTransport{
+	transport := pucoraTransport{
 		Transport: &http.Transport{
 			Proxy:                 http.ProxyFromEnvironment,
 			DialContext:           dialer.DialContext,
@@ -191,11 +191,11 @@ func newJWKClientOptions(cfg SecretProviderConfig) (JWKClientOptions, error) {
 	}, nil
 }
 
-type veloneticsTransport struct {
+type pucoraTransport struct {
 	*http.Transport
 }
 
-func (k veloneticsTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+func (k pucoraTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	req.Header.Set("User-Agent", core.PucoraUserAgent)
 	return k.Transport.RoundTrip(req)
 }

@@ -10,8 +10,8 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	veloneticsjose "github.com/pucora/velonetics-jose/v2"
-	jose "github.com/pucora/velonetics-jose/v2/gin"
+	pucorajose "github.com/pucora/pucora-jose/v2"
+	jose "github.com/pucora/pucora-jose/v2/gin"
 	"github.com/pucora/lura/v2/config"
 	"github.com/pucora/lura/v2/logging"
 	"github.com/pucora/lura/v2/proxy"
@@ -28,7 +28,7 @@ func TestJoseMw(t *testing.T) {
 	buf := bytes.NewBuffer([]byte{})
 	logger, _ := logging.NewLogger("DEBUG", buf, "")
 
-	hf = jose.HandlerFactory(hf, logger, new(veloneticsjose.NopRejecterFactory))
+	hf = jose.HandlerFactory(hf, logger, new(pucorajose.NopRejecterFactory))
 
 	signerProxy := func(_ context.Context, _ *proxy.Request) (*proxy.Response, error) {
 		return &proxy.Response{
@@ -62,7 +62,7 @@ func TestJoseMw(t *testing.T) {
 			},
 		},
 		ExtraConfig: map[string]interface{}{
-			"github.com/pucora/velonetics-jose/signer": map[string]interface{}{
+			"github.com/pucora/pucora-jose/signer": map[string]interface{}{
 				"alg":                  "RS256",
 				"kid":                  "2011-04-29",
 				"keys-to-sign":         []interface{}{"access_token", "refresh_token"},

@@ -11,22 +11,22 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-jose/go-jose/v3/jwt"
 	auth0 "github.com/pucora/go-auth0/v2"
-	veloneticsjose "github.com/pucora/velonetics-jose/v2"
+	pucorajose "github.com/pucora/pucora-jose/v2"
 	"github.com/pucora/lura/v2/config"
 	"github.com/pucora/lura/v2/logging"
 	"github.com/pucora/lura/v2/proxy"
 	ginlura "github.com/pucora/lura/v2/router/gin"
 )
 
-func HandlerFactory(hf ginlura.HandlerFactory, logger logging.Logger, rejecterF veloneticsjose.RejecterFactory) ginlura.HandlerFactory {
+func HandlerFactory(hf ginlura.HandlerFactory, logger logging.Logger, rejecterF pucorajose.RejecterFactory) ginlura.HandlerFactory {
 	return TokenSignatureValidator(TokenSigner(hf, logger), logger, rejecterF)
 }
 
 func TokenSigner(hf ginlura.HandlerFactory, logger logging.Logger) ginlura.HandlerFactory {
 	return func(cfg *config.EndpointConfig, prxy proxy.Proxy) gin.HandlerFunc {
 		logPrefix := "[ENDPOINT: " + cfg.Endpoint + "][JWTSigner]"
-		signerCfg, signer, err := veloneticsjose.NewSigner(cfg, nil)
-		if err == veloneticsjose.ErrNoSignerCfg {
+		signerCfg, signer, err := pucorajose.NewSigner(cfg, nil)
+		if err == pucorajose.ErrNoSignerCfg {
 			logger.Debug(logPrefix, "Signer disabled")
 			return hf(cfg, prxy)
 		}
@@ -55,7 +55,7 @@ func TokenSigner(hf ginlura.HandlerFactory, logger logging.Logger) ginlura.Handl
 				return
 			}
 
-			if err := veloneticsjose.SignFields(signerCfg.KeysToSign, signer, response); err != nil {
+			if err := pucorajose.SignFields(signerCfg.KeysToSign, signer, response); err != nil {
 				logger.Error(logPrefix, "Signing fields:", err.Error())
 				c.AbortWithStatus(http.StatusBadRequest)
 				return
@@ -69,17 +69,17 @@ func TokenSigner(hf ginlura.HandlerFactory, logger logging.Logger) ginlura.Handl
 	}
 }
 
-func TokenSignatureValidator(hf ginlura.HandlerFactory, logger logging.Logger, rejecterF veloneticsjose.RejecterFactory) ginlura.HandlerFactory {
+func TokenSignatureValidator(hf ginlura.HandlerFactory, logger logging.Logger, rejecterF pucorajose.RejecterFactory) ginlura.HandlerFactory {
 	return func(cfg *config.EndpointConfig, prxy proxy.Proxy) gin.HandlerFunc {
 		logPrefix := "[ENDPOINT: " + cfg.Endpoint + "][JWTValidator]"
 		if rejecterF == nil {
-			rejecterF = new(veloneticsjose.NopRejecterFactory)
+			rejecterF = new(pucorajose.NopRejecterFactory)
 		}
 		rejecter := rejecterF.New(logger, cfg)
 
 		handler := hf(cfg, prxy)
-		scfg, err := veloneticsjose.GetSignatureConfig(cfg)
-		if err == veloneticsjose.ErrNoValidatorCfg {
+		scfg, err := pucorajose.GetSignatureConfig(cfg)
+		if err == pucorajose.ErrNoValidatorCfg {
 			logger.Info(logPrefix, "Validator disabled for this endpoint")
 			return handler
 		}
@@ -88,7 +88,7 @@ func TokenSignatureValidator(hf ginlura.HandlerFactory, logger logging.Logger, r
 			return erroredHandler
 		}
 
-		validator, err := veloneticsjose.NewValidator(scfg, FromCookie, FromHeader)
+		validator, err := pucorajose.NewValidator(scfg, FromCookie, FromHeader)
 		if err != nil {
 			logger.Fatal(logPrefix, "Unable to create the validator:", err.Error())
 			return erroredHandler
@@ -98,10 +98,10 @@ func TokenSignatureValidator(hf ginlura.HandlerFactory, logger logging.Logger, r
 
 		if scfg.RolesKeyIsNested && strings.Contains(scfg.RolesKey, ".") && scfg.RolesKey[:4] != "http" {
 			logger.Debug(logPrefix, fmt.Sprintf("Roles will be matched against the nested key: '%s'", scfg.RolesKey))
-			aclCheck = veloneticsjose.CanAccessNested
+			aclCheck = pucorajose.CanAccessNested
 		} else {
 			logger.Debug(logPrefix, fmt.Sprintf("Roles will be matched against the key: '%s'", scfg.RolesKey))
-			aclCheck = veloneticsjose.CanAccess
+			aclCheck = pucorajose.CanAccess
 		}
 
 		var scopesMatcher func(string, map[string]interface{}, []string) bool
@@ -109,14 +109,14 @@ func TokenSignatureValidator(hf ginlura.HandlerFactory, logger logging.Logger, r
 		if len(scfg.Scopes) > 0 && scfg.ScopesKey != "" {
 			if scfg.ScopesMatcher == "all" {
 				logger.Debug(logPrefix, fmt.Sprintf("Constraint added: tokens must contain a claim '%s' with all these scopes: %v", scfg.ScopesKey, scfg.Scopes))
-				scopesMatcher = veloneticsjose.ScopesAllMatcher
+				scopesMatcher = pucorajose.ScopesAllMatcher
 			} else {
 				logger.Debug(logPrefix, fmt.Sprintf("Constraint added: tokens must contain a claim '%s' with any of these scopes: %v", scfg.ScopesKey, scfg.Scopes))
-				scopesMatcher = veloneticsjose.ScopesAnyMatcher
+				scopesMatcher = pucorajose.ScopesAnyMatcher
 			}
 		} else {
 			logger.Debug(logPrefix, "No scope validation required")
-			scopesMatcher = veloneticsjose.ScopesDefaultMatcher
+			scopesMatcher = pucorajose.ScopesDefaultMatcher
 		}
 
 		if scfg.OperationDebug {
@@ -195,7 +195,7 @@ func propagateHeaders(
 	logPrefix := "[ENDPOINT: " + cfg.Endpoint + "][PropagateHeaders]"
 	if len(propagationCfg) > 0 {
 		if !propagationPreserveArrays {
-			headersToPropagate, err := veloneticsjose.CalculateHeadersToPropagate(propagationCfg, claims)
+			headersToPropagate, err := pucorajose.CalculateHeadersToPropagate(propagationCfg, claims)
 			if err != nil {
 				logger.Warning(logPrefix, err.Error())
 			}
@@ -206,7 +206,7 @@ func propagateHeaders(
 			return
 		}
 
-		headersToPropagate, err := veloneticsjose.CalculateArrayHeadersToPropagate(propagationCfg, claims)
+		headersToPropagate, err := pucorajose.CalculateArrayHeadersToPropagate(propagationCfg, claims)
 		if err != nil {
 			logger.Warning(logPrefix, err.Error())
 		}
@@ -234,7 +234,7 @@ func extractRequiredJWTClaims(cfg *config.EndpointConfig) func(*gin.Context, map
 	}
 
 	return func(c *gin.Context, claims map[string]interface{}) {
-		cl := veloneticsjose.Claims(claims)
+		cl := pucorajose.Claims(claims)
 		for _, param := range required {
 			// TODO: check for nested claims
 			v, ok := cl.Get(param)

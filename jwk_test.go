@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/pucora/velonetics-jose/v2/secrets"
+	"github.com/pucora/pucora-jose/v2/secrets"
 	"github.com/pucora/lura/v2/core"
 )
 

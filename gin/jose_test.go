@@ -11,7 +11,7 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	jose "github.com/pucora/velonetics-jose/v2"
+	jose "github.com/pucora/pucora-jose/v2"
 	"github.com/pucora/lura/v2/config"
 	"github.com/pucora/lura/v2/logging"
 	"github.com/pucora/lura/v2/proxy"
@@ -151,38 +151,38 @@ func TestTokenSignatureValidator(t *testing.T) { // skipcq: GO-R1005
 	req = httptest.NewRequest("GET", propagateHeadersEndpointCfg.Endpoint, new(bytes.Buffer))
 	req.Header.Set("Authorization", "BEARER "+token)
 	// Check header-overwrite: it must be overwritten by a claim in the JWT!
-	req.Header.Set("x-velonetics-replace", "abc")
-	req.Header.Set("x-velonetics-ne", "fake_non_existing")
+	req.Header.Set("x-pucora-replace", "abc")
+	req.Header.Set("x-pucora-ne", "fake_non_existing")
 
 	w = httptest.NewRecorder()
 	engine.ServeHTTP(w, req)
 
-	if req.Header.Get("x-velonetics-jti") == "" {
+	if req.Header.Get("x-pucora-jti") == "" {
 		t.Error("JWT claim not propagated to header: jti")
-	} else if req.Header.Get("x-velonetics-jti") != "mnb23vcsrt756yuiomnbvcx98ertyuiop" {
-		t.Errorf("wrong JWT claim propagated for 'jti': %v", req.Header.Get("x-velonetics-jti"))
+	} else if req.Header.Get("x-pucora-jti") != "mnb23vcsrt756yuiomnbvcx98ertyuiop" {
+		t.Errorf("wrong JWT claim propagated for 'jti': %v", req.Header.Get("x-pucora-jti"))
 	}
 
 	// Check that existing header values are overwritten
-	if req.Header.Get("x-velonetics-replace") == "abc" {
-		t.Error("JWT claim not propagated to x-velonetics-replace header: sub")
-	} else if req.Header.Get("x-velonetics-replace") != "1234567890qwertyuio" {
-		t.Errorf("wrong JWT claim propagated for 'sub': %v", req.Header.Get("x-velonetics-replace"))
+	if req.Header.Get("x-pucora-replace") == "abc" {
+		t.Error("JWT claim not propagated to x-pucora-replace header: sub")
+	} else if req.Header.Get("x-pucora-replace") != "1234567890qwertyuio" {
+		t.Errorf("wrong JWT claim propagated for 'sub': %v", req.Header.Get("x-pucora-replace"))
 	}
 
-	if req.Header.Get("x-velonetics-sub") == "" {
+	if req.Header.Get("x-pucora-sub") == "" {
 		t.Error("JWT claim not propagated to header: sub")
-	} else if req.Header.Get("x-velonetics-sub") != "1234567890qwertyuio" {
-		t.Errorf("wrong JWT claim propagated for 'sub': %v", req.Header.Get("x-velonetics-sub"))
+	} else if req.Header.Get("x-pucora-sub") != "1234567890qwertyuio" {
+		t.Errorf("wrong JWT claim propagated for 'sub': %v", req.Header.Get("x-pucora-sub"))
 	}
 
-	if req.Header.Get("x-velonetics-roles") == "" {
+	if req.Header.Get("x-pucora-roles") == "" {
 		t.Error("JWT claim not propagated to header: roles")
-	} else if req.Header.Get("x-velonetics-roles") != "role_a,role_b" {
-		t.Errorf("wrong JWT claim propagated for 'roles': %v", req.Header.Get("x-velonetics-roles"))
+	} else if req.Header.Get("x-pucora-roles") != "role_a,role_b" {
+		t.Errorf("wrong JWT claim propagated for 'roles': %v", req.Header.Get("x-pucora-roles"))
 	}
 
-	if req.Header.Get("x-velonetics-ne") != "" {
+	if req.Header.Get("x-pucora-ne") != "" {
 		t.Error("JWT claim propagated, although it shouldn't: nonexistent")
 	}
 
@@ -196,38 +196,38 @@ func TestTokenSignatureValidator(t *testing.T) { // skipcq: GO-R1005
 	req = httptest.NewRequest("GET", propagateArrayHeadersEndpointCfg.Endpoint, new(bytes.Buffer))
 	req.Header.Set("Authorization", "BEARER "+token)
 	// Check header-overwrite: it must be overwritten by a claim in the JWT!
-	req.Header.Set("x-velonetics-replace", "abc")
-	req.Header.Set("x-velonetics-ne", "fake_non_existing")
+	req.Header.Set("x-pucora-replace", "abc")
+	req.Header.Set("x-pucora-ne", "fake_non_existing")
 
 	w = httptest.NewRecorder()
 	engine.ServeHTTP(w, req)
 
-	if req.Header.Get("x-velonetics-jti") == "" {
+	if req.Header.Get("x-pucora-jti") == "" {
 		t.Error("JWT claim not propagated to header: jti")
-	} else if req.Header.Get("x-velonetics-jti") != "mnb23vcsrt756yuiomnbvcx98ertyuiop" {
-		t.Errorf("wrong JWT claim propagated for 'jti': %v", req.Header.Get("x-velonetics-jti"))
+	} else if req.Header.Get("x-pucora-jti") != "mnb23vcsrt756yuiomnbvcx98ertyuiop" {
+		t.Errorf("wrong JWT claim propagated for 'jti': %v", req.Header.Get("x-pucora-jti"))
 	}
 
 	// Check that existing header values are overwritten
-	if req.Header.Get("x-velonetics-replace") == "abc" {
-		t.Error("JWT claim not propagated to x-velonetics-replace header: sub")
-	} else if req.Header.Get("x-velonetics-replace") != "1234567890qwertyuio" {
-		t.Errorf("wrong JWT claim propagated for 'sub': %v", req.Header.Get("x-velonetics-replace"))
+	if req.Header.Get("x-pucora-replace") == "abc" {
+		t.Error("JWT claim not propagated to x-pucora-replace header: sub")
+	} else if req.Header.Get("x-pucora-replace") != "1234567890qwertyuio" {
+		t.Errorf("wrong JWT claim propagated for 'sub': %v", req.Header.Get("x-pucora-replace"))
 	}
 
-	if req.Header.Get("x-velonetics-sub") == "" {
+	if req.Header.Get("x-pucora-sub") == "" {
 		t.Error("JWT claim not propagated to header: sub")
-	} else if req.Header.Get("x-velonetics-sub") != "1234567890qwertyuio" {
-		t.Errorf("wrong JWT claim propagated for 'sub': %v", req.Header.Get("x-velonetics-sub"))
+	} else if req.Header.Get("x-pucora-sub") != "1234567890qwertyuio" {
+		t.Errorf("wrong JWT claim propagated for 'sub': %v", req.Header.Get("x-pucora-sub"))
 	}
 
-	if req.Header.Get("x-velonetics-roles") == "" {
+	if req.Header.Get("x-pucora-roles") == "" {
 		t.Error("JWT claim not propagated to header: roles")
-	} else if !reflect.DeepEqual(req.Header.Values("x-velonetics-roles"), []string{"role_a", "role_b"}) {
-		t.Errorf("wrong JWT claim propagated for 'roles': %v", req.Header.Get("x-velonetics-roles"))
+	} else if !reflect.DeepEqual(req.Header.Values("x-pucora-roles"), []string{"role_a", "role_b"}) {
+		t.Errorf("wrong JWT claim propagated for 'roles': %v", req.Header.Get("x-pucora-roles"))
 	}
 
-	if req.Header.Get("x-velonetics-ne") != "" {
+	if req.Header.Get("x-pucora-ne") != "" {
 		t.Error("JWT claim propagated, although it shouldn't: nonexistent")
 	}
 
