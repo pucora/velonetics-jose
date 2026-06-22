@@ -36,7 +36,7 @@ func TestJoseMw(t *testing.T) {
 			Data: map[string]interface{}{
 				"access_token": map[string]interface{}{
 					"aud":   "http://api.example.com",
-					"iss":   "https://pucora.io",
+					"iss":   "https://pucora.in",
 					"sub":   "1234567890qwertyuio",
 					"jti":   "mnb23vcsrt756yuiomnbvcx98ertyuiop",
 					"roles": []interface{}{"role_a", "role_b"},
@@ -44,7 +44,7 @@ func TestJoseMw(t *testing.T) {
 				},
 				"refresh_token": map[string]interface{}{
 					"aud": "http://api.example.com",
-					"iss": "https://pucora.io",
+					"iss": "https://pucora.in",
 					"sub": "1234567890qwertyuio",
 					"jti": "mnb23vcsrt756yuiomn12876bvcx98ertyuiop",
 					"exp": 1735689600,
